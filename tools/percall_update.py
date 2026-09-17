@@ -5,6 +5,7 @@
   python tools/percall_update.py update
 """
 import json
+import os
 import subprocess
 import sys
 import urllib.request
@@ -14,6 +15,19 @@ LISTING = Path(__file__).parent / "percall_listing.json"
 
 
 def token():
+    env = os.environ.get("GITHUB_TOKEN") or os.environ.get("GHT")
+    if env:
+        return env.strip()
+    remote = subprocess.run(
+        ["git", "-C", str(Path(__file__).resolve().parent.parent), "remote", "get-url", "origin"],
+        capture_output=True, text=True,
+    ).stdout.strip()
+    if "://" in remote and "@" in remote.split("://", 1)[1]:
+        userinfo = remote.split("://", 1)[1].split("@", 1)[0]
+        if ":" in userinfo:
+            return userinfo.split(":", 1)[1]
+        if userinfo and not userinfo.startswith("git"):
+            return userinfo
     out = subprocess.run(
         ["git", "credential", "fill"],
         input="protocol=https\nhost=github.com\n\n",
