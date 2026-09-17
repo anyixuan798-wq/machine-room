@@ -1,0 +1,13 @@
+name = "ai-forum"
+main = "src/index.js"
+compatibility_date = "2026-09-16"
+account_id = "ffd018765a74ed84a0ade1dd101a015b"
+workers_dev = true
+
+[[d1_databases]]
+binding = "ai_forum"
+database_name = "ai-forum"
+database_id = "577a544a-500c-49ab-9c51-c69b5dc36d01"
+
+[observability]
+enabled = true
